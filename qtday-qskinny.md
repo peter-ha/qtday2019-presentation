@@ -1,6 +1,3 @@
-footer: my footer
-
-
 # [fit] Using the Qt Scene Graph
 # [fit] from C++ with QSkinny
 
@@ -18,15 +15,29 @@ footer: my footer
 
 Using the Qt graphic stack from C++
 
-^ C++ bindings
-QtWidgets familiarity
-Qt for Python
+^ Why?
+-> C++ bindings
+-> QtWidgets familiarity
+-> Qt for Python
+What to take away from this presentation?
+-> What is missing in Qt right now
+-> How QSkinny looks
+-> How a combined effort could look like
 
 ---
 
 # Agenda
 
-1. *QML under the hood*
+1. QML under the hood
+1. The QML / C++ boundary
+1. QSkinny
+1. Outlook
+
+---
+
+# Agenda
+
+1. **QML under the hood**
 1. The QML / C++ boundary
 1. QSkinny
 1. Outlook
@@ -39,11 +50,31 @@ Qt for Python
 
 ---
 
-# What happens when instantiating a "Rectangle { }"
+types of scene graph nodes:
+
+- opacity / clip / transform / image / rectangle etc.
+
+(here diagram)
 
 ---
 
-# The QML / C++ boundary
+What happens when instantiating a "Rectangle { }"
+
+---
+
+# Agenda
+
+1. QML under the hood
+1. **The QML / C++ boundary**
+1. QSkinny
+1. Outlook
+
+---
+
+![inline fit](QML-stack.jpg)
+
+^ each QML object is a QObject (or QGadget)
+might be not fine-grained enough for gradient stops / speedometer ticks etc.
 
 ---
 
@@ -51,41 +82,91 @@ Qt for Python
 
 Write everything in QML
 
+```
+Control {
+    id: slider
+    (...)
+    style: Settings.styleComponent(Settings.style, "SliderStyle.qml", slider)
+    property Component tickmarks: Repeater {
+    Rectangle {
+        color: "#777"
+        width: 1
+        height: 3
+        y: (...)
+        x: (...)
+        }
+    }
+}
+```
+
 ^ problem: too slow
 has been abandoned by now
-too many QObjects created
+too many QObjects created (see e.g. tickmarks above)
 
 ---
 
 # QtQuickControls 2
 
-Write most things in C++ and some in QML
-User code still only QML
+some parts QML, some C++
+
+```c++
+qquickslider_p.h:
+
+class Q_QUICKTEMPLATES2_PRIVATE_EXPORT QQuickSlider : public QQuickControl
+{
+    Q_OBJECT
+    Q_PROPERTY(qreal from READ from WRITE setFrom NOTIFY fromChanged FINAL)
+    Q_PROPERTY(qreal to READ to WRITE setTo NOTIFY toChanged FINAL)
+    (...)
+};
+```
+
+```
+Slider.qml:
+
+T.Slider {
+    id: control
+}
+```
 
 ^ problem: 1. private API
-2. font / palette / locale not inherited for user types
--> creates boundary: Qt code C++, user code QML
+2. font / palette / locale cannot inherited for user types
+-> creates boundary: Qt code C++, user code QML. Was not designed with extensibility in mind
 user defined controls cannot be written in C++
 
 ---
 
-# QSkinny
+# Agenda
 
-^ options back then: 1. modify Qt code
-2. write own library
-3. mix QQC1 / QQC2 / Skinny somehow
+1. QML under the hood
+1. The QML / C++ boundary
+1. **QSkinny**
+1. Outlook
+
+^ big question: Why not make QQC2 public and let people inherit?
+-> there are some more differences which we will see soon
+
+---
+
+![inline fit](QSkinny.png)
+
+^ QSkinny and QML both use QtQuick -> they could be mixed and matched,
+and there are examples for that
+QSkinny makes QML optional though (and in one project there is no QML)
+code-wise it looks like Widgets code (we will see an example later), but is
+hardware accelerated just like QML
 
 ---
 
 # QSkinny design goals
 
-1. lightweight
-1. flexible theming
-1. dynamic sizing
+- lightweight
+- flexible theming
+- dynamic sizing
 
-^lightweight: don't create unnecessary QObjects / QQuickItems, cache items
-theming: QStyle not enough
-dynamic sizing: vector graphics / layouts
+^lightweight: don't create unnecessary QObjects or QQuickItems / cache items / don't create scene graph nodes until they are necessary (e.g. QML creates all nodes even if they are outside of the bounding rectangle)
+theming: QStyle not enough / separate content from theming
+dynamic sizing: vector graphics / layouts. Why dynamic sizing? screens on embedded are fixed, but layouts need to be resized e.g. when changing theme / language, or switching to another physical screen size. Vector graphics allow for size adaptations (widthForHeight() etc.)
 
 ---
 
@@ -93,6 +174,7 @@ dynamic sizing: vector graphics / layouts
 
 ```c++
     QskWindow window;
+    window.resize(200, 200);
     auto box = new QskLinearBox(Qt::Vertical);
     auto button = new QskPushButton("push me", box);
     auto label = new QskTextLabel("label", box);
@@ -102,9 +184,33 @@ dynamic sizing: vector graphics / layouts
 
 ---
 
+# separation of content and style
+
+(here diagram of skinlet etc.)
+
+---
+
+# example
+
+![inline fit](skinny-hmi-demo.png)
+
+---
+
+# example
+
+![inline fit](skinny-speedometers.png)
+
+---
+
 # Outlook
 
-What about Qt 6?
+##QSkinny
+
+polishing / documentation
+
+##Qt 6
+
+(maybe) new styling / opening up QtQuickControls 2?
 
 ---
 
@@ -112,4 +218,4 @@ What about Qt 6?
 
 ![](mueller-chiellini.jpg)
 
-### [@peha23](https://twitter.com/peha23) on Twitter
+## [@peha23](https://twitter.com/peha23) on Twitter
