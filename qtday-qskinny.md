@@ -174,13 +174,14 @@ dynamic sizing: vector graphics / layouts. Why dynamic sizing? screens on embedd
 
 ```c++
     QskWindow window;
-    window.resize(200, 200);
     auto box = new QskLinearBox(Qt::Vertical);
     auto button = new QskPushButton("push me", box);
     auto label = new QskTextLabel("label", box);
     window.addItem(box);
     window.show();
 ```
+
+![inline 100%](skinny-minimal-example.png)
 
 ---
 
@@ -216,6 +217,6 @@ polishing / documentation
 
 # Discussion
 
-![](mueller-chiellini.jpg)
+![right filtered](mueller-chiellini.jpg)
 
 ## [@peha23](https://twitter.com/peha23) on Twitter
