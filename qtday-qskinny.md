@@ -1,3 +1,7 @@
+theme: QtDay 2019
+footer: [https://github.com/uwerat/qskinny](https://github.com/uwerat/qskinny)
+
+
 # [fit] Using the Qt Scene Graph
 # [fit] from C++ with QSkinny
 
@@ -50,11 +54,9 @@ What to take away from this presentation?
 
 ---
 
-types of scene graph nodes:
+# Types of scene graph nodes
 
-- opacity / clip / transform / image / rectangle etc.
-
-(here diagram)
+![inline](types-of-scene-graph-nodes.jpg)
 
 ---
 
@@ -119,9 +121,7 @@ class Q_QUICKTEMPLATES2_PRIVATE_EXPORT QQuickSlider : public QQuickControl
     Q_PROPERTY(qreal to READ to WRITE setTo NOTIFY toChanged FINAL)
     (...)
 };
-```
 
-```
 Slider.qml:
 
 T.Slider {
@@ -219,4 +219,4 @@ polishing / documentation
 
 ![right filtered](mueller-chiellini.jpg)
 
-## [@peha23](https://twitter.com/peha23) on Twitter
+[@peha23](https://twitter.com/peha23) on Twitter
