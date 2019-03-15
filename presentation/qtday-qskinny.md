@@ -58,9 +58,17 @@ What to take away from this presentation?
 
 ![inline](types-of-scene-graph-nodes.jpg)
 
+^ Don't remember all the details, just this: All QML objects are broken down into a set of scene graph nodes
+
 ---
 
-What happens when instantiating a "Rectangle { }"
+# QML example
+
+```
+Rectangle {    id: outterRectangle    width: 200    height: 200    color: "red"    opacity: 0.5    Rectangle {        id: innerRectangle        width: 50        height: 50        clip: true        anchors.bottom: parent.bottom        anchors.right: parent.right        color: "green"    }}
+```
+
+![right 100%](qml-example.png)
 
 ---
 
