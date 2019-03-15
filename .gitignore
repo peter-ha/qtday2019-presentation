@@ -1,0 +1,4 @@
+*.o
+.qmake.stash
+Makefile
+examples/qskinny-hello-world/qskinny-hello-world
