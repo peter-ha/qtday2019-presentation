@@ -72,6 +72,18 @@ Rectangle {    id: outterRectangle    width: 200    height: 200    color: "r
 
 ---
 
+![left fit](qml-example-qtquick.png)
+
+![right 100%](qml-example.png)
+
+---
+
+![left fit](qml-example-scene-graph.png)
+
+![right 100%](qml-example.png)
+
+---
+
 # Agenda
 
 1. QML under the hood
@@ -190,6 +202,10 @@ dynamic sizing: vector graphics / layouts. Why dynamic sizing? screens on embedd
 ```
 
 ![inline 100%](skinny-minimal-example.png)
+
+---
+
+![inline 100%](skinny-qtquick-hierarchy.png)
 
 ---
 
