@@ -5,6 +5,8 @@ footer: [https://github.com/uwerat/qskinny](https://github.com/uwerat/qskinny)
 # [fit] Using the Qt Scene Graph
 # [fit] from C++ with QSkinny
 
+^What is QSkinny? What is the scene graph? I hope we can answer that during this presentation.
+
 ---
 
 # Who am I?
@@ -13,20 +15,26 @@ footer: [https://github.com/uwerat/qskinny](https://github.com/uwerat/qskinny)
 - former QtNetwork maintainer
 - [@peha23](https://twitter.com/peha23) on Twitter
 
+^on Twitter or of course after the talk etc.
+
 ---
 
 # What is this talk about?
 
 Using the Qt graphic stack from C++
 
-^ Why?
--> C++ bindings
+^How many of you have used QtWidgets? How many have used QML?
+-> Desktop is still using QtWidgets (e.g. QtCreator)
+Why?
+-> It's C++ (type safety, static code checking, not having to learn C++)
 -> QtWidgets familiarity
 -> Qt for Python
 What to take away from this presentation?
 -> What is missing in Qt right now
--> How QSkinny looks
+-> How QSkinny works
 -> How a combined effort could look like
+What is this talk not about?
+-> Bashing QML, rather offering options to mix and match C++ more freely (including the option to use only C++)
 
 ---
 
@@ -36,6 +44,9 @@ What to take away from this presentation?
 1. The QML / C++ boundary
 1. QSkinny
 1. Outlook
+
+^under the hood: How is QML turned to objects that are rendered on the screen?
+boundary: How much QML do I want in my 
 
 ---
 
@@ -50,7 +61,21 @@ What to take away from this presentation?
 
 # QML under the hood
 
-![inline fit](QML-stack.jpg)
+![inline fit](qml-stack.png)
+
+^- The QML engine "translates" the QML code that the user writes into QtQuickItems (e.g. QQuickRectangle, QQuickText); the API is not public
+QtQuick creates scene graph nodes, i.e. graphical representation of objects (e.g. rectangle node etc.)
+- scene graph nodes are rendered with OpenGL (and others in the future) and uploaded onto the GPU
+- What is the scene graph? A representation of graphical elements that make it performant to be rendered on the graphics card
+- interestingly, the scene graph API is "more public" than QtQuick
+
+---
+
+# Types of QtQuick items
+
+![inline fit](qtquick-classes.png)
+
+^QQuickItem is public, the others are not
 
 ---
 
@@ -58,7 +83,8 @@ What to take away from this presentation?
 
 ![inline](types-of-scene-graph-nodes.jpg)
 
-^ Don't remember all the details, just this: All QML objects are broken down into a set of scene graph nodes
+^- Don't remember all the details, just this: All QML objects are ultimately broken down into a set of scene graph nodes
+- The blue nodes are important ones
 
 ---
 
@@ -67,6 +93,8 @@ What to take away from this presentation?
 ```
 Rectangle {    id: outterRectangle    width: 200    height: 200    color: "red"    opacity: 0.5    Rectangle {        id: innerRectangle        width: 50        height: 50        clip: true        anchors.bottom: parent.bottom        anchors.right: parent.right        color: "green"    }}
 ```
+
+^clip: Will clip the contents to the bounding rectangle
 
 ![right 100%](qml-example.png)
 
@@ -93,10 +121,10 @@ Rectangle {    id: outterRectangle    width: 200    height: 200    color: "r
 
 ---
 
-![inline fit](QML-stack.jpg)
+![inline fit](qml-stack.png)
 
-^ each QML object is a QObject (or QGadget)
-might be not fine-grained enough for gradient stops / speedometer ticks etc.
+^- each QML object is a QObject (or QGadget); this might be not fine-grained enough for gradient stops / speedometer ticks etc.
+- Which / how much code do you want to write in QML and how much in C++?
 
 ---
 
@@ -132,7 +160,7 @@ too many QObjects created (see e.g. tickmarks above)
 some parts QML, some C++
 
 ```c++
-qquickslider_p.h:
+--- qquickslider_p.h:
 
 class Q_QUICKTEMPLATES2_PRIVATE_EXPORT QQuickSlider : public QQuickControl
 {
@@ -142,7 +170,7 @@ class Q_QUICKTEMPLATES2_PRIVATE_EXPORT QQuickSlider : public QQuickControl
     (...)
 };
 
-Slider.qml:
+--- Slider.qml:
 
 T.Slider {
     id: control
@@ -153,6 +181,8 @@ T.Slider {
 2. font / palette / locale cannot inherited for user types
 -> creates boundary: Qt code C++, user code QML. Was not designed with extensibility in mind
 user defined controls cannot be written in C++
+also: QQC2 cannot be used without a QML engine right now
+historically, the portion of QML is getting less and less
 
 ---
 
@@ -205,13 +235,7 @@ dynamic sizing: vector graphics / layouts. Why dynamic sizing? screens on embedd
 
 ---
 
-![inline 100%](skinny-qtquick-hierarchy.png)
-
----
-
-# separation of content and style
-
-(here diagram of skinlet etc.)
+![inline fit](skinny-qtquick-hierarchy.png)
 
 ---
 
@@ -227,20 +251,35 @@ dynamic sizing: vector graphics / layouts. Why dynamic sizing? screens on embedd
 
 ---
 
-# Outlook
+# Agenda
 
-##QSkinny
-
-polishing / documentation
-
-##Qt 6
-
-(maybe) new styling / opening up QtQuickControls 2?
+1. QML under the hood
+1. The QML / C++ boundary
+1. QSkinny
+1. **Outlook**
 
 ---
 
-# Discussion
+# QSkinny
+
+- polishing
+- documentation
+
+#Qt 6
+
+- new styling?
+- opening up QtQuickControls 2?
+
+^still: Can people use it without QML engine?
+
+---
 
 ![right filtered](mueller-chiellini.jpg)
 
-[@peha23](https://twitter.com/peha23) on Twitter
+# Discussion
+
+feedback to [@peha23](https://twitter.com/peha23) on Twitter
+
+presentation material is at [https://github.com/peter-ha/qtday2019-presentation/](https://github.com/peter-ha/qtday2019-presentation/)
+
+^also feel free to contact via QSkinny email address
