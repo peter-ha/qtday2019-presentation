@@ -1,0 +1,62 @@
+From 6c7ec7de014d270e1b32e6482e88467392d71ac2 Mon Sep 17 00:00:00 2001
+From: Peter Hartmann <github@peterh.33mail.com>
+Date: Mon, 25 Mar 2019 19:04:22 +0100
+Subject: [PATCH] QtDeclarative: add some debug output
+
+Change-Id: Ic6b5c3b41a08a41fbe393edaf0f6e1bf3fe8cdd5
+---
+ src/quick/items/qquickitem.cpp           | 6 ++++++
+ src/quick/scenegraph/coreapi/qsgnode.cpp | 6 ++++++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/src/quick/items/qquickitem.cpp b/src/quick/items/qquickitem.cpp
+index 9e32ccfee..3d833dfdf 100644
+--- a/src/quick/items/qquickitem.cpp
++++ b/src/quick/items/qquickitem.cpp
+@@ -75,6 +75,8 @@
+ #include <private/qv4qobjectwrapper_p.h>
+ #include <private/qdebug_p.h>
+ 
++#include <QTimer>
++
+ #if QT_CONFIG(cursor)
+ # include <QtGui/qcursor.h>
+ #endif
+@@ -3266,6 +3268,10 @@ void QQuickItemPrivate::init(QQuickItem *parent)
+         QQuickItemPrivate *parentPrivate = QQuickItemPrivate::get(parent);
+         setImplicitLayoutMirror(parentPrivate->inheritedLayoutMirror, parentPrivate->inheritMirrorFromParent);
+     }
++
++    QTimer::singleShot( 0, [ this, parent ]() {
++        qDebug() << "creating QQuickItem" << q_func() << q_func()->objectName() << "with parent" << parent;
++    });
+ }
+ 
+ void QQuickItemPrivate::data_append(QQmlListProperty<QObject> *prop, QObject *o)
+diff --git a/src/quick/scenegraph/coreapi/qsgnode.cpp b/src/quick/scenegraph/coreapi/qsgnode.cpp
+index 1976538ae..6439eb208 100644
+--- a/src/quick/scenegraph/coreapi/qsgnode.cpp
++++ b/src/quick/scenegraph/coreapi/qsgnode.cpp
+@@ -45,6 +45,8 @@
+ 
+ #include "limits.h"
+ 
++#include <QTimer>
++
+ QT_BEGIN_NAMESPACE
+ 
+ #ifndef QT_NO_DEBUG
+@@ -305,6 +307,10 @@ void QSGNode::init()
+     }
+ #endif
+ 
++    QTimer::singleShot( 0, [ this ]() {
++        qDebug() << "creating SGNode" << this << ", parent is" << this->parent();
++    });
++
+ #ifdef QSG_RUNTIME_DESCRIPTION
+     if (d_ptr.isNull())
+         d_ptr.reset(new QSGNodePrivate());
+-- 
+2.17.1
+
