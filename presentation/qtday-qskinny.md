@@ -25,10 +25,10 @@ Using the Qt graphic stack from C++
 
 ^How many of you have used QtWidgets? How many have used QML?
 -> Desktop is still using QtWidgets (e.g. QtCreator)
-Why?
--> It's C++ (type safety, static code checking, not having to learn C++)
--> QtWidgets familiarity
--> Qt for Python
+Why use C++?
+-> It's C++ (type safety, static code checking, not having to learn JS)
+-> QtWidgets familiarity (teams that used to work with QtWidgets)
+-> bindings for other languages (Qt for Python)
 What to take away from this presentation?
 -> What is missing in Qt right now
 -> How QSkinny works
@@ -46,7 +46,9 @@ What is this talk not about?
 1. Outlook
 
 ^under the hood: How is QML turned to objects that are rendered on the screen?
-boundary: How much QML do I want in my 
+boundary: How much QML do I want in my application (some years ago: everything QML, now: more and more C++)
+QSkinny: overview and some examples
+Outlook: What is going to happen with QML and QSkinny
 
 ---
 
